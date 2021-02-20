@@ -81,3 +81,36 @@ function populateWeatherForecast() {
     }).then(function (response) {
 
         console.log(response);
+
+        var temporaryForecastObj;
+
+       
+        for (var i = 4; i < response.list.length; i += 8) {
+            temporaryForecastObj = {
+                date: response.list[i].dt_txt.split(" ")[0],
+                weatherIcon: response.list[i].weather[0].icon,
+                temperature: Math.round(response.list[i].main.temp),
+                humidity: response.list[i].main.humidity
+            };
+            fiveDayForecastArray.push(temporaryForecastObj);
+        }
+        for (var i = 0; i < fiveDayForecastArray.length; i++) {
+            fiveDayForecastArray[i].date = formatDates(fiveDayForecastArray[i].date);
+        }
+
+        //Creates HTML elements to populate page with forecast data
+        var forecastHeader = $('<h5>5-Day Forecast:</h5>');
+        $("#forecast-header").append(forecastHeader);
+
+        for (var i = 0; i < fiveDayForecastArray.length; i++) {
+            var forecastCard = $('<div class="col-lg-2 col-sm-3 mb-1"><span class="badge badge-primary"><h5>' + fiveDayForecastArray[i].date + '</h5>' +
+                '<p><img class="w-100" src="http://openweathermap.org/img/wn/' + fiveDayForecastArray[i].weatherIcon + '@2x.png"></p>' +
+                '<p>Temp: ' + fiveDayForecastArray[i].temperature + '°F</p>' +
+                '<p>Humidity: ' + fiveDayForecastArray[i].humidity + '%</p>' +
+                '<span></div>');
+            $("#forecast-row").append(forecastCard);
+        }
+
+
+    });
+}
