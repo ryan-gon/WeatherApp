@@ -5,6 +5,10 @@ var weatherCol = $("#weather-col");
 
 //open weather api key
 var apiKey = "913db2d2e0e028d3282906a34005c24d";
+var currentWeatherUrl;
+var forecastUrl;
+var storedSearches = [];
+
 
 var tempStoredSearches = localStorage.getItem("storedSearches");
 if (tempStoredSearches != null)
@@ -74,7 +78,7 @@ function populateWeatherForecast() {
 
     var fiveDayForecastArray = [];
 
-    //Five day forecast API call
+    
     $.ajax({
         url: forecastUrl,
         method: "GET"
@@ -94,11 +98,12 @@ function populateWeatherForecast() {
             };
             fiveDayForecastArray.push(temporaryForecastObj);
         }
+
         for (var i = 0; i < fiveDayForecastArray.length; i++) {
             fiveDayForecastArray[i].date = formatDates(fiveDayForecastArray[i].date);
         }
 
-        //Creates HTML elements to populate page with forecast data
+        
         var forecastHeader = $('<h5>5-Day Forecast:</h5>');
         $("#forecast-header").append(forecastHeader);
 
@@ -115,11 +120,12 @@ function populateWeatherForecast() {
     });
 }
 
-    function renderStoredSearches() {
+function renderStoredSearches() {
 
     $("#search-history").empty();
 
     
+    if ($("#search-bar").val() != "") {
         if (storedSearches.indexOf($("#search-bar").val()) != -1) {
             storedSearches.splice(storedSearches.indexOf($("#search-bar").val()), 1)
         }
@@ -127,3 +133,42 @@ function populateWeatherForecast() {
     }
 
     
+    localStorage.setItem("storedSearches", storedSearches);
+
+    
+    for (var i = 0; i < storedSearches.length; i++) {
+        var newListItem = $('<li class="list-group-item">' + storedSearches[i] + '</li>');
+        $("#search-history").append(newListItem);
+    }
+
+    
+    $("li").on("click", function () {
+        $("#search-bar").val($(event.target).text());
+        searchButton.click();
+    });
+}
+
+
+function formatDates(data) {
+    var dateArray = data.split("-");
+    var formattedDate = dateArray[1] + "/" + dateArray[2] + "/" + dateArray[0];
+    return formattedDate
+}
+
+searchButton.on("click", function () {
+
+    currentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + searchBar.val() + "&units=imperial&appid=" + apiKey;
+
+    forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchBar.val() + "&units=imperial&appid=" + apiKey;
+
+    $("#weather-col").empty();
+    $("#forecast-header").empty();
+    $("#forecast-row").empty();
+
+    populateCurrentWeather();
+    populateWeatherForecast();
+});
+
+renderStoredSearches();
+
+
