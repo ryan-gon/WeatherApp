@@ -3,13 +3,14 @@ var searchButton = $("#search-btn");
 var searchHistory = $("#search-history");
 var weatherCol = $("#weather-col");
 
+//open weather api key
 var apiKey = "913db2d2e0e028d3282906a34005c24d";
 
 var tempStoredSearches = localStorage.getItem("storedSearches");
 if (tempStoredSearches != null)
     storedSearches = tempStoredSearches.split(",");
 
-//Creates current date variable
+
 var today = new Date();
 var currentDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
@@ -20,7 +21,7 @@ function populateCurrentWeather() {
         method: "GET"
     }).then(function (response) {
 
-        //Object to store current weather data
+
         var currentWeatherObj = {
             location: response.name,
             date: currentDate,
@@ -39,3 +40,18 @@ function populateCurrentWeather() {
         var latitude = response.coord.lat;
         var longitude = response.coord.lon;
         var currentUvUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + latitude + "&lon=" + longitude + "&appid=" + apiKey;
+
+        $.ajax({
+            url: currentUvUrl,
+            method: "GET"
+        }).then(function (response2) {
+
+            currentWeatherObj.uvIndex = response2.value;
+
+           
+            if (currentWeatherObj.uvIndex >= 8)
+                currentWeatherObj.uvIntensity = "high";
+            else if (currentWeatherObj.uvIndex < 3)
+                currentWeatherObj.uvIntensity = "low";
+            else
+                currentWeatherObj.uvIntensity = "medium";
