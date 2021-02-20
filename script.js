@@ -55,3 +55,17 @@ function populateCurrentWeather() {
                 currentWeatherObj.uvIntensity = "low";
             else
                 currentWeatherObj.uvIntensity = "medium";
+            
+                var currentWeatherCard = $('<div class="card"><div class="card-body"><h5 class="card-title">' + currentWeatherObj.location + ' (' + currentWeatherObj.date + ') ' +
+                '<span class="badge badge-primary"><img id="weather-icon" src="http://openweathermap.org/img/wn/' + currentWeatherObj.weatherIcon + '@2x.png"></span></h5>' +
+                '<p class="card-text">Temperature: ' + currentWeatherObj.temperature + ' °F</p>' +
+                '<p class="card-text">Humidity: ' + currentWeatherObj.humidity + '%</p>' +
+                '<p class="card-text">Wind Speed: ' + currentWeatherObj.wind + ' MPH</p>' +
+                '<p class="card-text">UV Index: <span class="badge badge-secondary ' + currentWeatherObj.uvIntensity + '">' + currentWeatherObj.uvIndex + '</span>')
+            $("#weather-col").append(currentWeatherCard);
+        });
+
+        renderStoredSearches();
+
+    });
+}
