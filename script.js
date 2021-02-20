@@ -69,3 +69,15 @@ function populateCurrentWeather() {
 
     });
 }
+
+function populateWeatherForecast() {
+
+    var fiveDayForecastArray = [];
+
+    //Five day forecast API call
+    $.ajax({
+        url: forecastUrl,
+        method: "GET"
+    }).then(function (response) {
+
+        console.log(response);
