@@ -114,3 +114,16 @@ function populateWeatherForecast() {
 
     });
 }
+
+    function renderStoredSearches() {
+
+    $("#search-history").empty();
+
+    
+        if (storedSearches.indexOf($("#search-bar").val()) != -1) {
+            storedSearches.splice(storedSearches.indexOf($("#search-bar").val()), 1)
+        }
+        storedSearches.unshift($("#search-bar").val());
+    }
+
+    
